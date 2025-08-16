@@ -1,7 +1,5 @@
 ﻿using Org.BouncyCastle.Crypto.Digests;
 
-using System.Security.Cryptography;
-
 namespace BugFree.Security.GM
 {
     /// <summary>
@@ -9,16 +7,16 @@ namespace BugFree.Security.GM
     /// </summary>
     public class SM3 : System.Security.Cryptography.HashAlgorithm
     {
-        private SM3Digest _digest;
-        private byte[] _buffer;
-        private int _bufferLength;
+        /// <summary>内部 BouncyCastle SM3 实现</summary>
+        SM3Digest _digest;
 
-        public SM3()
+    /// <summary>
+    /// 初始化 SM3 实例，设置 HashSize=256。
+    /// </summary>
+    public SM3()
         {
             _digest = new SM3Digest();
             HashSizeValue = 256;
-            _buffer = new byte[_digest.GetByteLength()];
-            _bufferLength = 0;
         }
 
         /// <summary>
@@ -28,17 +26,29 @@ namespace BugFree.Security.GM
         {
             return new SM3();
         }
+    /// <summary>
+    /// 重置内部状态。
+    /// </summary>
         public override void Initialize()
         {
             _digest.Reset();
-            _bufferLength = 0;
         }
 
+    /// <summary>
+    /// 核心散列过程：对输入分块数据做更新。
+    /// </summary>
+    /// <param name="array">输入数据</param>
+    /// <param name="ibStart">起始偏移</param>
+    /// <param name="cbSize">长度</param>
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
             _digest.BlockUpdate(array, ibStart, cbSize);
         }
 
+    /// <summary>
+    /// 结束散列，输出最终结果。
+    /// </summary>
+    /// <returns>哈希结果字节数组</returns>
         protected override byte[] HashFinal()
         {
             byte[] result = new byte[_digest.GetDigestSize()];
@@ -46,6 +56,11 @@ namespace BugFree.Security.GM
             return result;
         }
 
+    /// <summary>
+    /// 计算输入数据的 SM3 哈希值（快捷方法）。
+    /// </summary>
+    /// <param name="data">输入数据</param>
+    /// <returns>哈希值</returns>
         public new static byte[] ComputeHash(byte[] data)
         {
             var sm3 = new SM3Digest();
@@ -55,6 +70,10 @@ namespace BugFree.Security.GM
             return result;
         }
 
+    /// <summary>
+    /// 释放资源。
+    /// </summary>
+    /// <param name="disposing">是否由托管代码显式调用</param>
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);

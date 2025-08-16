@@ -8,11 +8,13 @@ namespace BugFree.Security
     public static class SymmetricProvider
     {
         static readonly ConcurrentDictionary<SymmetricAlgorithm, ISymmetricAlgorithm> _Providers = new ConcurrentDictionary<SymmetricAlgorithm, ISymmetricAlgorithm>();
+
+
         /// <summary>加密</summary>
         /// <param name="plainText">明文文本</param>
         /// <param name="algorithm">算法</param>
-        /// <param name="key">密钥</param>
-        public static string EncryptSymmetric(this string plainText, SymmetricAlgorithm algorithm = SymmetricAlgorithm.Aes, string key = null!)
+        /// <param name="key">密钥（必填）</param>
+        public static string EncryptSymmetric(this string plainText, SymmetricAlgorithm algorithm, string key)
         {
             if (string.IsNullOrEmpty(plainText)) { throw new ArgumentNullException(nameof(plainText)); }
             if (string.IsNullOrWhiteSpace(key)) { throw new ArgumentNullException(nameof(key)); }
@@ -20,9 +22,9 @@ namespace BugFree.Security
             return $"{(int)algorithm}${provider.Encrypt(plainText, key)}";
         }
         /// <summary>解密</summary>
-        /// <param name="cipherText">密文文本</param>
-        /// 
-        public static string DecryptSymmetric(this string cipherText, string key = null!)
+        /// <param name="cipherText">密文文本（格式：算法编号$Base64(负载)）</param>
+        /// <param name="key">密钥（必填）</param>
+        public static string DecryptSymmetric(this string cipherText, string key)
         {
             if (string.IsNullOrEmpty(cipherText)) { throw new ArgumentNullException(nameof(cipherText)); }
             if (string.IsNullOrWhiteSpace(key)) { throw new ArgumentNullException(nameof(key)); }

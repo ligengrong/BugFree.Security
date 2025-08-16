@@ -33,13 +33,13 @@
         /// <param name="data">待签名数据</param>
         /// <param name="priKey">PEM 格式私钥</param>
         /// <returns>Base64 编码的签名字符串</returns>
-        string Sign(string data, string priKey = null!);
+    string Sign(string data, string priKey);
         /// <summary>使用公钥验证签名。</summary>
         /// <param name="data">原文字符串</param>
         /// <param name="signature">Base64 编码的签名</param>
         /// <param name="pubKey">PEM 格式公钥</param>
         /// <returns>验签是否通过</returns>
-        bool Verify(string data, string signature, string pubKey = null!);
+    bool Verify(string data, string signature, string pubKey);
     }
     /// <summary>
     /// 密钥交换接口，定义通过本地私钥和对方公钥生成共享密钥的方法。
@@ -60,8 +60,8 @@
     /// </summary>
     public class KeyPair {
         /// <summary>公钥（PEM 格式字符串）</summary>
-        public string PublicKey { get; set; }
+        public string PublicKey { get; set; } = string.Empty;
         /// <summary>私钥（PEM 格式字符串）</summary>
-        public string PrivateKey { get; set; }
+        public string PrivateKey { get; set; } = string.Empty;
     }
 }

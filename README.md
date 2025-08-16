@@ -14,14 +14,14 @@ BugFree.Security 是一个基于 .NET 的安全加密库，覆盖对称加密、
 - 进行中/待接入：代码草案或接口已预留，尚未在工厂注册或依赖缺失。
 - 规划中：路线图阶段，尚未落地实现。
 
-### 对称加密
+-### 对称加密
 - 已实现（稳定）
 	- AES（CBC）
 	- AES-GCM（认证加密，嵌入 Nonce/Tag/AAD）
 	- AES-CTR / AES-CFB / AES-OFB（基于 BouncyCastle）
 	- DES、TripleDES、RC2（CBC）
 	- Blowfish（CBC）、Twofish（CBC）、Camellia（CBC）
-		- SM4（内部实现兼容 ECB/CBC；当前默认 ECB）
+	- SM4（内部实现兼容 ECB/CBC；当前默认 ECB）
 - 规划中
 	- ChaCha20-Poly1305、AES-CCM、AES-SIV
 	- XTS 模式（磁盘加密场景）
@@ -147,8 +147,16 @@ var s2 = b.PrivateKey.GenerateSharedSecret(a.PublicKey, AsymmetricAlgorithm.ECDH
 
 ## 依赖环境
 
-- .NET 5/6/7/8/9 或 .NET Standard 2.1
-- 部分算法依赖 BouncyCastle（已打包于工程引用中）
+- 运行/开发：.NET 8.0（当前项目采用单目标构建）
+- 计划：视需求增加多目标（如 .NET 7/9、.NET Standard 2.1）
+- 部分算法依赖 BouncyCastle（已通过 NuGet 引入）
+
+## 近期更新
+
+- 目标框架切换为 net8.0（单目标构建，简化依赖与发布）
+- 依赖更新：BouncyCastle.Cryptography 升级至 2.6.2
+- 预引入 Konscious.Security.Cryptography.Argon2（为后续密码哈希 Provider 做准备，默认未启用）
+- 文档优化：明确对称密文格式（算法编号$Base64(负载)）与 AES-GCM 的 Nonce/Tag/AAD 自包含说明；修正 SM4 条目缩进
 
 ## 贡献
 

@@ -42,7 +42,7 @@ namespace BugFree.Security.GM
         /// <param name="rgbKey">加密密钥，16字节</param>
         /// <param name="rgbIV">初始向量，16字节（CBC模式下必需）</param>
         /// <returns>ICryptoTransform 实例</returns>
-        public override ICryptoTransform CreateEncryptor(byte[] rgbKey, byte[] rgbIV)
+    public override ICryptoTransform CreateEncryptor(byte[] rgbKey, byte[]? rgbIV)
         {
             return CreateTransform(rgbKey, rgbIV, true);
         }
@@ -53,7 +53,7 @@ namespace BugFree.Security.GM
         /// <param name="rgbKey">解密密钥，16字节</param>
         /// <param name="rgbIV">初始向量，16字节（CBC模式下必需）</param>
         /// <returns>ICryptoTransform 实例</returns>
-        public override ICryptoTransform CreateDecryptor(byte[] rgbKey, byte[] rgbIV)
+    public override ICryptoTransform CreateDecryptor(byte[] rgbKey, byte[]? rgbIV)
         {
             return CreateTransform(rgbKey, rgbIV, false);
         }
@@ -89,7 +89,7 @@ namespace BugFree.Security.GM
         /// <param name="iv">初始向量，16字节（CBC模式下必需）</param>
         /// <param name="forEncryption">true=加密，false=解密</param>
         /// <returns>ICryptoTransform 实例</returns>
-        private ICryptoTransform CreateTransform(byte[] key, byte[] iv, bool forEncryption)
+    private ICryptoTransform CreateTransform(byte[] key, byte[]? iv, bool forEncryption)
         {
             // 检查密钥长度
             if (key == null || key.Length != 16)

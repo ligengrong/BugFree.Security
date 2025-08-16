@@ -19,7 +19,8 @@ namespace BugFree.Security
         /// </summary>
         /// <param name="algorithm">非对称算法类型</param>
         /// <returns>密钥对（PEM 格式）</returns>
-        public static KeyPair GenerateKeyPair(AsymmetricAlgorithm algorithm = AsymmetricAlgorithm.RSA) {
+        public static KeyPair GenerateKeyPair(AsymmetricAlgorithm algorithm = AsymmetricAlgorithm.RSA)
+        {
             var provider = CreateDataProvider(algorithm);
             return provider.GenerateKeyPair();
         }
@@ -31,11 +32,12 @@ namespace BugFree.Security
         /// <param name="pubKey">公钥（PEM 格式）</param>
         /// <param name="algorithm">算法类型</param>
         /// <returns>格式为 "算法编号$Base64密文" 的字符串</returns>
-        public static string EncryptAsymmetric(this string plainText, string pubKey = null!, AsymmetricAlgorithm algorithm = AsymmetricAlgorithm.RSA) {
+        public static string EncryptAsymmetric(this string plainText, string pubKey = null!, AsymmetricAlgorithm algorithm = AsymmetricAlgorithm.RSA)
+        {
             if (string.IsNullOrEmpty(plainText)) { throw new ArgumentNullException(nameof(plainText)); }
             if (string.IsNullOrWhiteSpace(pubKey)) { throw new ArgumentNullException(nameof(pubKey)); }
             if (algorithm is not AsymmetricAlgorithm.RSA and not AsymmetricAlgorithm.SM2) { throw new ArgumentException($"无效算法/{algorithm} 不支持加解密"); }
-            var provider = CreateDataProvider(algorithm) as IAsymmetricEncryption;
+            var provider = (IAsymmetricEncryption)CreateDataProvider(algorithm);
             // 调用具体算法的加密实现
             return $"{(int)algorithm}${provider.Encrypt(plainText, pubKey)}";
         }
@@ -46,13 +48,14 @@ namespace BugFree.Security
         /// <param name="cipherText">格式为 "算法编号$Base64密文" 的字符串</param>
         /// <param name="priKey">私钥（PEM 格式）</param>
         /// <returns>解密后的明文</returns>
-        public static string DecryptAsymmetric(this string cipherText, string priKey = null!) {
+        public static string DecryptAsymmetric(this string cipherText, string priKey = null!)
+        {
             if (string.IsNullOrEmpty(cipherText)) { throw new ArgumentNullException(nameof(cipherText)); }
             if (string.IsNullOrWhiteSpace(priKey)) { throw new ArgumentNullException(nameof(priKey)); }
             var parts = cipherText.Split('$');
             if (parts.Length != 2) { throw new ArgumentException("无效的加密文本格式。", nameof(cipherText)); }
-            if (!Enum.TryParse(parts[0], out AsymmetricAlgorithm algorithm) || algorithm is not AsymmetricAlgorithm.RSA or AsymmetricAlgorithm.SM2) { throw new ArgumentException($"无效算法/{algorithm} 不支持加解密"); }
-            var provider = CreateDataProvider(algorithm) as IAsymmetricEncryption;
+            if (!Enum.TryParse(parts[0], out AsymmetricAlgorithm algorithm) || algorithm is not AsymmetricAlgorithm.RSA and not AsymmetricAlgorithm.SM2) { throw new ArgumentException($"无效算法/{algorithm} 不支持加解密"); }
+            var provider = (IAsymmetricEncryption)CreateDataProvider(algorithm);
             // 调用具体算法的解密实现
             return provider.Decrypt(parts[1], priKey);
         }
@@ -68,8 +71,8 @@ namespace BugFree.Security
         {
             if (string.IsNullOrEmpty(data)) { throw new ArgumentNullException(nameof(data)); }
             if (string.IsNullOrWhiteSpace(priKey)) { throw new ArgumentNullException(nameof(priKey)); }
-            if (algorithm is not AsymmetricAlgorithm.RSA and not AsymmetricAlgorithm.DSA and not AsymmetricAlgorithm.ECDSA and not AsymmetricAlgorithm.Ed25519) { throw new Exception($"{algorithm} 不支持签名"); }
-            var provider = CreateDataProvider(algorithm) as IAsymmetricSignature;
+            if (algorithm is not AsymmetricAlgorithm.RSA and not AsymmetricAlgorithm.DSA and not AsymmetricAlgorithm.ECDSA and not AsymmetricAlgorithm.Ed25519 and not AsymmetricAlgorithm.SM2) { throw new Exception($"{algorithm} 不支持签名"); }
+            var provider = (IAsymmetricSignature)CreateDataProvider(algorithm);
             // 调用具体算法的签名实现
             return $"{(int)algorithm}${provider.Sign(data, priKey)}";
         }
@@ -88,8 +91,8 @@ namespace BugFree.Security
             if (string.IsNullOrWhiteSpace(pubKey)) { throw new ArgumentNullException(nameof(pubKey)); }
             var parts = signature.Split('$');
             if (parts.Length != 2) { throw new ArgumentException("无效签名格式。", nameof(signature)); }
-            if (!Enum.TryParse(parts[0], out AsymmetricAlgorithm algorithm) || algorithm is not AsymmetricAlgorithm.RSA and not AsymmetricAlgorithm.DSA and not AsymmetricAlgorithm.ECDSA and not AsymmetricAlgorithm.Ed25519) { throw new Exception($"{algorithm} 不支持验签"); }
-            var provider = CreateDataProvider(algorithm) as IAsymmetricSignature;
+            if (!Enum.TryParse(parts[0], out AsymmetricAlgorithm algorithm) || algorithm is not AsymmetricAlgorithm.RSA and not AsymmetricAlgorithm.DSA and not AsymmetricAlgorithm.ECDSA and not AsymmetricAlgorithm.Ed25519 and not AsymmetricAlgorithm.SM2) { throw new Exception($"{algorithm} 不支持验签"); }
+            var provider = (IAsymmetricSignature)CreateDataProvider(algorithm);
             // 调用具体算法的验签实现
             return provider.Verify(data, parts[1], pubKey);
         }
@@ -105,8 +108,8 @@ namespace BugFree.Security
         {
             if (string.IsNullOrWhiteSpace(pubKey)) { throw new ArgumentNullException(nameof(pubKey)); }
             if (string.IsNullOrWhiteSpace(priKey)) { throw new ArgumentNullException(nameof(priKey)); }
-            if (algorithm is not AsymmetricAlgorithm.ECDH and not AsymmetricAlgorithm.X25519) { throw new Exception($"{algorithm} 不支持密钥交换"); }
-            var provider = CreateDataProvider(algorithm) as IKeyExchange;
+            if (algorithm is not AsymmetricAlgorithm.ECDH and not AsymmetricAlgorithm.X25519 and not AsymmetricAlgorithm.SM2) { throw new Exception($"{algorithm} 不支持密钥交换"); }
+            var provider = (IKeyExchange)CreateDataProvider(algorithm);
             // 调用具体算法的密钥交换实现
             return provider.GenerateSharedSecret(priKey, pubKey);
         }
@@ -126,9 +129,9 @@ namespace BugFree.Security
                     AsymmetricAlgorithm.DSA => new DsaDataProvider(),
                     AsymmetricAlgorithm.ECDSA => new EcdsaDataProvider(),
                     AsymmetricAlgorithm.ECDH => new EcdhDataProvider(),
-                    //AsymmetricAlgorithm.Ed25519 => new Ed25519DataProvider(),
-                    //AsymmetricAlgorithm.X25519 => new X25519DataProvider(),
-                    //AsymmetricAlgorithm.SM2 => new SM2DataProvider(),
+                    AsymmetricAlgorithm.Ed25519 => new Ed25519DataProvider(),
+                    AsymmetricAlgorithm.X25519 => new X25519DataProvider(),
+                    AsymmetricAlgorithm.SM2 => new SM2DataProvider(),
                     _ => throw new NotSupportedException($"不支持的算法类型：{algorithm}"),
                 };
             });

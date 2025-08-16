@@ -59,7 +59,7 @@ namespace BugFree.Security.Asymmetric
             // 解析公钥（SPKI）
             var spkiDer = DecodePem(pubKey, "PUBLIC KEY");
             var spki = SubjectPublicKeyInfo.GetInstance(Asn1Object.FromByteArray(spkiDer));
-            var pubBytes = spki.PublicKeyData.GetOctets();
+            var pubBytes = spki.PublicKey.GetOctets();
             if (pubBytes == null || pubBytes.Length != 32)
                 throw new CryptographicException("无效的 X25519 公钥");
 

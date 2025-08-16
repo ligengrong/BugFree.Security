@@ -25,6 +25,7 @@ namespace BugFree.Security.Symmetric
             if (string.IsNullOrEmpty(plainText)) { throw new ArgumentNullException(nameof(plainText)); }
             if (string.IsNullOrWhiteSpace(key)) { throw new ArgumentNullException(nameof(key)); }
             using var sm4 = _SM4.Value;
+            if (sm4 is null) { throw new InvalidOperationException("SM4 instance is not initialized."); }
             sm4.Key = Convert.FromHexString(key)[..KeySize];
             sm4.GenerateIV();// 每次加密都生成新的、随机的 IV
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
@@ -47,6 +48,7 @@ namespace BugFree.Security.Symmetric
         public string Decrypt(string cipherText, string key)
         {
             using var sm4 = _SM4.Value;
+            if(sm4 is null) { throw new InvalidOperationException("SM4 instance is not initialized."); }
             var payload = Convert.FromBase64String(cipherText);
             var ivSize = sm4.BlockSize / 8; if (payload.Length < ivSize) { throw new CryptographicException("Invalid payload length. It must be at least the size of the IV."); }
             // 步骤 1: 从负载中提取 IV。

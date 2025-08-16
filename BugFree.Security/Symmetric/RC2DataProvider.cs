@@ -24,6 +24,7 @@ namespace BugFree.Security.Symmetric
             if (string.IsNullOrEmpty(plainText)) { throw new ArgumentNullException(nameof(plainText)); }
             if (string.IsNullOrWhiteSpace(key)) { throw new ArgumentNullException(nameof(key)); }
             using var rc2 = _RC2.Value;
+            if (rc2 is null) { throw new InvalidOperationException("RC2 instance is not initialized."); }
             // RC2 支持 8~128位密钥，这里取 MD5(key) 前16字节
             rc2.Key = MD5.HashData(Encoding.UTF8.GetBytes(key))[..16];
             rc2.GenerateIV(); // 8字节IV
@@ -45,6 +46,7 @@ namespace BugFree.Security.Symmetric
             if (string.IsNullOrEmpty(cipherText)) { throw new ArgumentNullException(nameof(cipherText)); }
             if (string.IsNullOrWhiteSpace(key)) { throw new ArgumentNullException(nameof(key)); }
             using var rc2 = _RC2.Value;
+            if (rc2 is null) { throw new InvalidOperationException("RC2 instance is not initialized."); }
             var payload = Convert.FromBase64String(cipherText);
             var ivSize = rc2.BlockSize / 8; // 8字节
             if (payload.Length < ivSize) { throw new CryptographicException("Invalid payload length. It must be at least the size of the IV."); }

@@ -24,6 +24,7 @@ namespace BugFree.Security.Symmetric
             if (string.IsNullOrEmpty(plainText)) { throw new ArgumentNullException(nameof(plainText)); }
             if (string.IsNullOrWhiteSpace(key)) { throw new ArgumentNullException(nameof(key)); }
             using var des = _Des.Value;
+            if (des is null) { throw new InvalidOperationException("DES instance is not initialized."); }
             // DES 密钥长度为 8 字节，使用 MD5 派生后取前8字节
             des.Key = MD5.HashData(Encoding.UTF8.GetBytes(key))[..8];
             des.GenerateIV(); // 每次加密都生成新的、随机的 IV
@@ -45,6 +46,7 @@ namespace BugFree.Security.Symmetric
             if (string.IsNullOrEmpty(cipherText)) { throw new ArgumentNullException(nameof(cipherText)); }
             if (string.IsNullOrWhiteSpace(key)) { throw new ArgumentNullException(nameof(key)); }
             using var des = _Des.Value;
+            if (des is null) { throw new InvalidOperationException("DES instance is not initialized."); }
             var payload = Convert.FromBase64String(cipherText);
             var ivSize = des.BlockSize / 8;
             if (payload.Length < ivSize) { throw new CryptographicException("Invalid payload length. It must be at least the size of the IV."); }

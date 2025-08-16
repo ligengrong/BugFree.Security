@@ -78,7 +78,7 @@ namespace BugFree.Security.Asymmetric
         /// <param name="data">待签名数据（原文字符串，UTF-8 编码）</param>
         /// <param name="priKey">PEM 格式私钥</param>
         /// <returns>Base64 编码的签名字符串</returns>
-        public string Sign(string data, string priKey = null)
+        public string Sign(string data, string priKey)
         {
             if (string.IsNullOrEmpty(data)) throw new ArgumentNullException(nameof(data));
             if (string.IsNullOrWhiteSpace(priKey)) throw new ArgumentNullException(nameof(priKey));
@@ -98,7 +98,7 @@ namespace BugFree.Security.Asymmetric
         /// <param name="signature">Base64 编码的签名字符串</param>
         /// <param name="pubKey">PEM 格式公钥</param>
         /// <returns>验签是否通过，true 表示签名有效</returns>
-        public bool Verify(string data, string signature, string pubKey = null)
+        public bool Verify(string data, string signature, string pubKey)
         {
             if (string.IsNullOrEmpty(data)) throw new ArgumentNullException(nameof(data));
             if (string.IsNullOrWhiteSpace(signature)) throw new ArgumentNullException(nameof(signature));

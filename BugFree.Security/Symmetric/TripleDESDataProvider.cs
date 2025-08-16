@@ -4,7 +4,7 @@ using System.Text;
 namespace BugFree.Security.Symmetric
 {
 
-    // <summary>使用 TripleDES (CBC 模式) 提供数据保护。</summary>
+    /// <summary>使用 TripleDES (CBC 模式) 提供数据保护。</summary>
     public class TripleDESDataProvider : ISymmetricAlgorithm
     {
         // 使用ThreadLocal缓存TripleDES实例以提高性能，确保线程安全。
@@ -24,6 +24,7 @@ namespace BugFree.Security.Symmetric
             if (string.IsNullOrEmpty(plainText)) { throw new ArgumentNullException(nameof(plainText)); }
             if (string.IsNullOrWhiteSpace(key)) { throw new ArgumentNullException(nameof(key)); }
             using var tdes = _TripleDES.Value;
+            if(tdes is null) { throw new InvalidOperationException("TripleDES instance is not initialized."); }
             // TripleDES 支持 16 或 24 字节密钥，这里取 MD5(key) 前16字节
             tdes.Key = MD5.HashData(Encoding.UTF8.GetBytes(key))[..16];
             tdes.GenerateIV(); // 8字节IV
@@ -46,6 +47,7 @@ namespace BugFree.Security.Symmetric
             if (string.IsNullOrEmpty(cipherText)) { throw new ArgumentNullException(nameof(cipherText)); }
             if (string.IsNullOrWhiteSpace(key)) { throw new ArgumentNullException(nameof(key)); }
             using var tdes = _TripleDES.Value;
+            if (tdes is null) { throw new InvalidOperationException("TripleDES instance is not initialized."); }
             var payload = Convert.FromBase64String(cipherText);
             var ivSize = tdes.BlockSize / 8; // 8字节
             if (payload.Length < ivSize) { throw new CryptographicException("Invalid payload length. It must be at least the size of the IV."); }

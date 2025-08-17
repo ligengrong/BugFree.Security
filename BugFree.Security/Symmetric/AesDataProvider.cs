@@ -27,7 +27,7 @@ namespace BugFree.Security.Symmetric
             if (string.IsNullOrEmpty(plainText)) { throw new ArgumentNullException(nameof(plainText)); }
             if (string.IsNullOrWhiteSpace(key)) { throw new ArgumentNullException(nameof(key)); }
             using var aes = _Aes.Value;
-            if(aes is null) { throw new InvalidOperationException("AES instance is not initialized."); }
+            if (aes is null) { throw new InvalidOperationException("AES instance is not initialized."); }
             aes.Key = SHA256.HashData(Encoding.UTF8.GetBytes(key));
             aes.GenerateIV(); // 每次加密都生成新的、随机的 IV
             using var memoryStream = new MemoryStream();
@@ -53,7 +53,7 @@ namespace BugFree.Security.Symmetric
             using var aes = _Aes.Value;
             if (aes is null) { throw new InvalidOperationException("AES instance is not initialized."); }
             var payload = Convert.FromBase64String(cipherText);
-            var ivSize = aes.BlockSize / 8; 
+            var ivSize = aes.BlockSize / 8;
             if (payload.Length < ivSize) { throw new CryptographicException("Invalid payload length. It must be at least the size of the IV."); }
             // 步骤 1: 从负载中提取 IV。
             var iv = new byte[ivSize];

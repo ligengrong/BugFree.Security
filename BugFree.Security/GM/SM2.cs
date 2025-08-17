@@ -1,14 +1,15 @@
-﻿using Org.BouncyCastle.Asn1.GM;
+﻿using Org.BouncyCastle.Asn1; // DER/ASN.1 编解码（签名 r,s 转换）
+using Org.BouncyCastle.Asn1.GM;
 using Org.BouncyCastle.Asn1.X9;
-using Org.BouncyCastle.Asn1; // DER/ASN.1 编解码（签名 r,s 转换）
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Agreement; // ECDHBasicAgreement（密钥派生，非严格 SM2 KAP）
+using Org.BouncyCastle.Crypto.Digests; // SM3Digest（KDF）
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Crypto.Digests; // SM3Digest（KDF）
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
+
 using System.Text;
 
 namespace BugFree.Security.GM

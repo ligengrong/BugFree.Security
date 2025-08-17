@@ -24,7 +24,7 @@ namespace BugFree.Security.Symmetric
             if (string.IsNullOrEmpty(plainText)) { throw new ArgumentNullException(nameof(plainText)); }
             if (string.IsNullOrWhiteSpace(key)) { throw new ArgumentNullException(nameof(key)); }
             using var tdes = _TripleDES.Value;
-            if(tdes is null) { throw new InvalidOperationException("TripleDES instance is not initialized."); }
+            if (tdes is null) { throw new InvalidOperationException("TripleDES instance is not initialized."); }
             // TripleDES 支持 16 或 24 字节密钥，这里取 MD5(key) 前16字节
             tdes.Key = MD5.HashData(Encoding.UTF8.GetBytes(key))[..16];
             tdes.GenerateIV(); // 8字节IV

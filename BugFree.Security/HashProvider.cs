@@ -24,7 +24,7 @@ namespace BugFree.Security
         /// <param name="salt">用于哈希的盐。如果为 null，将自动生成。</param>
         /// <param name="saltSize">盐的字节大小。</param>
         /// <returns>格式为 "salt$hash$algorithms" 的自包含哈希字符串。</returns>
-    public static string ComputeHash(this string data, IList<HashAlgorithm>? algorithms = null, string? salt = null, int saltSize = 16)
+        public static string ComputeHash(this string data, IList<HashAlgorithm>? algorithms = null, string? salt = null, int saltSize = 16)
         {
             if (string.IsNullOrWhiteSpace(data)) { throw new ArgumentNullException(nameof(data)); }
             // 如果未提供算法，则默认为 SHA256

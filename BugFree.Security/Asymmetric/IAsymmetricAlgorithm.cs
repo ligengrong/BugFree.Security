@@ -4,7 +4,8 @@
     /// 定义非对称加密相关接口，包括密钥对生成、加解密、签名/验签、密钥交换。
     /// 适用于多种主流非对称算法的统一抽象。
     /// </summary>
-    internal interface IKeyPairGenerator {
+    internal interface IKeyPairGenerator
+    {
         /// <summary>生成一对公钥和私钥。</summary>
         /// <returns>密钥对（KeyPair），公钥和私钥均为 PEM 格式字符串</returns>
         KeyPair GenerateKeyPair();
@@ -28,18 +29,19 @@
     /// <summary>
     /// 非对称签名接口，定义签名和验签方法。
     /// </summary>
-    internal interface IAsymmetricSignature {
+    internal interface IAsymmetricSignature
+    {
         /// <summary>使用私钥对数据进行签名。</summary>
         /// <param name="data">待签名数据</param>
         /// <param name="priKey">PEM 格式私钥</param>
         /// <returns>Base64 编码的签名字符串</returns>
-    string Sign(string data, string priKey);
+        string Sign(string data, string priKey);
         /// <summary>使用公钥验证签名。</summary>
         /// <param name="data">原文字符串</param>
         /// <param name="signature">Base64 编码的签名</param>
         /// <param name="pubKey">PEM 格式公钥</param>
         /// <returns>验签是否通过</returns>
-    bool Verify(string data, string signature, string pubKey);
+        bool Verify(string data, string signature, string pubKey);
     }
     /// <summary>
     /// 密钥交换接口，定义通过本地私钥和对方公钥生成共享密钥的方法。
@@ -58,7 +60,8 @@
     /// <summary>
     /// 密钥对结构，包含 PEM 格式的公钥和私钥。
     /// </summary>
-    public class KeyPair {
+    public class KeyPair
+    {
         /// <summary>公钥（PEM 格式字符串）</summary>
         public string PublicKey { get; set; } = string.Empty;
         /// <summary>私钥（PEM 格式字符串）</summary>

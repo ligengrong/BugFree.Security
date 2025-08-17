@@ -13,9 +13,9 @@ namespace BugFree.Security.Symmetric
             return sm4;
         });
         /// <summary>SM4 密钥大小为 128 位，即 16 字节。</summary>
-        public int KeySize { get;  } = 16;
+        public int KeySize { get; } = 16;
         /// <summary>SM4 密钥大小为 128 位，即 16 字节。</summary>
-        public int IVSize { get;  } = 16;
+        public int IVSize { get; } = 16;
         /// <summary>使用 SM4 (CBC 模式) 加密明文。 </summary>
         /// <param name="plainText">要加密的明文字符串。</param>
         /// <param name="key">用于派生加密密钥的任意字符串。</param>
@@ -48,7 +48,7 @@ namespace BugFree.Security.Symmetric
         public string Decrypt(string cipherText, string key)
         {
             using var sm4 = _SM4.Value;
-            if(sm4 is null) { throw new InvalidOperationException("SM4 instance is not initialized."); }
+            if (sm4 is null) { throw new InvalidOperationException("SM4 instance is not initialized."); }
             var payload = Convert.FromBase64String(cipherText);
             var ivSize = sm4.BlockSize / 8; if (payload.Length < ivSize) { throw new CryptographicException("Invalid payload length. It must be at least the size of the IV."); }
             // 步骤 1: 从负载中提取 IV。

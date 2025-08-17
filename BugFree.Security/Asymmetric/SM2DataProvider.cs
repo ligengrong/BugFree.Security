@@ -1,5 +1,6 @@
-﻿using System.Text;
-using BugFree.Security.GM; // 复用 GM/SM2.cs
+﻿using BugFree.Security.GM; // 复用 GM/SM2.cs
+
+using System.Text;
 
 namespace BugFree.Security.Asymmetric
 {

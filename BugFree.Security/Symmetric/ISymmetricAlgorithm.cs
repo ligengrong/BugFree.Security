@@ -1,7 +1,8 @@
 ﻿namespace BugFree.Security.Symmetric
 {
     /// <summary>对称加解密接口</summary>
-    internal interface ISymmetricAlgorithm {
+    internal interface ISymmetricAlgorithm
+    {
         /// <summary>使用指定的密钥对明文数据进行加密。</summary>
         /// <param name="plainText">要加密的明文字符串。</param>
         /// <param name="key">用于加密的密钥。密钥的格式和要求由具体实现决定。</param>

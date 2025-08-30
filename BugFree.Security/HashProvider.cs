@@ -77,9 +77,9 @@ namespace BugFree.Security
                 HashAlgorithm.SHA256 => ComputeHash(_SHA256.Value, salt, data),
                 HashAlgorithm.SHA384 => ComputeHash(_SHA384.Value, salt, data),
                 HashAlgorithm.SHA512 => ComputeHash(_SHA512.Value, salt, data),
-                HashAlgorithm.SHA3_256 => ComputeHash(_SHA3_256.Value, salt, data),
-                HashAlgorithm.SHA3_384 => ComputeHash(_SHA3_384.Value, salt, data),
-                HashAlgorithm.SHA3_512 => ComputeHash(_SHA3_512.Value, salt, data),
+                HashAlgorithm.SHA3_256 => !SHA3_256.IsSupported ? throw new PlatformNotSupportedException($"{nameof(SHA3_256)} is not supported on this platform.") : ComputeHash(_SHA3_256.Value, salt, data),
+                HashAlgorithm.SHA3_384 => !SHA3_384.IsSupported ? throw new PlatformNotSupportedException($"{nameof(SHA3_384)} is not supported on this platform.") : ComputeHash(_SHA3_384.Value, salt, data),
+                HashAlgorithm.SHA3_512 => !SHA3_512.IsSupported ? throw new PlatformNotSupportedException($"{nameof(SHA3_512)} is not supported on this platform.") : ComputeHash(_SHA3_512.Value, salt, data),
                 // 国密3 SM3 哈希
                 //使用的 System.Security.Cryptography.GM.SM3 这个类的具体实现在重用时存在状态管理上的缺陷。即使您正确地调用了 Initialize()，它的内部状态也无法保证被完全、可靠地重置
                 HashAlgorithm.SM3 => ComputeHash(_SM3.Value, salt, data),
@@ -131,11 +131,11 @@ namespace BugFree.Security
         SHA384,
         /// <summary>SHA512</summary>
         SHA512,
-        /// <summary>SHA3-256</summary>
+        /// <summary>SHA3-256, 仅在 Windows 11 build 25324 或更高版本</summary>
         SHA3_256,
-        /// <summary>SHA3-384</summary>
+        /// <summary>SHA3-384, 仅在 Windows 11 build 25324 或更高版本</summary>
         SHA3_384,
-        /// <summary>SHA3-512</summary>
+        /// <summary>SHA3-512, 仅在 Windows 11 build 25324 或更高版本</summary>
         SHA3_512,
         /// <summary>SM3(国密3)</summary>
         SM3,

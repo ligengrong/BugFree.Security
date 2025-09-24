@@ -81,7 +81,7 @@ dotnet add package BugFree.Security
 using BugFree.Security;
 var data = "This is a test string for hashing and encryption.";
 var hash = data.ComputeHash(new[] { HashAlgorithm.SHA256 });
-var ok = data.Verify(hash);
+var ok = data.VerifyHash(hash);
 ```
 
 ### 2）对称加密
